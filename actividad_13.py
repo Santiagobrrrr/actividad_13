@@ -1,12 +1,13 @@
 ﻿from logging import exception
 
 students = {}
+courses = {}
 
 def add_student(id_student, name_student, carrer_student):
     students[id_student] = {
         "name": name_student,
         "carrer": carrer_student,
-        "grade": {}
+        "course": {}
     }
     print(f"\nEstudiante registrado en el sistema.")
     print(students)
@@ -25,12 +26,49 @@ def request_id_student():
             if id_user in students:
                 print(f"Nombre del usuario: {students[id_user]['name']}.")
                 print(f"Carrera: {students[id_user]['carrer']}.")
-                print(f"Cursos: {students[id_user]['grade']}")
+                print(f"Cursos: {students[id_user]['course']}")
                 break
 
             else:
                 print(f"El id {id_user} existe. Redirigiendo al menú, intente de nuevo.")
                 break
+
+def add_course():
+    while True:
+        course_user = input(f"Ingrese el nombre del curso a agregar: ").strip().lower()
+        if course_user == "":
+            print(f"No puede ingresar una curso vacío, intente nuevamente.")
+        else:
+            break
+
+    if course_user not in courses:
+        while True:
+            try:
+                grade_user = int(input(f"Ingrese la nota del curso: "))
+
+            except ValueError:
+                print(f"Error: ingreso mal un valor, intente de nuevo.")
+            except TypeError:
+                print(f"Error: tipo de valor inválido, intente de nuevo.")
+            except Exception as e:
+                print(f"Error inesperado: {e}")
+
+            else:
+                if grade_user >= 0 and grade_user <= 100:
+                    courses[course_user] = {
+                        "grade_user": grade_user
+                    }
+                    students[id_student]["course"][course_user] = courses[course_user]
+                    print(f"Nota registrada en el sistema.")
+                    print(courses)
+                    print(students)
+                    break
+
+                else:
+                    print(f"Debe de ingresar una nota entre 0 y 100.")
+        else:
+            print(f"El curso ya esta registrado en el sistema. Intente de nuevo. Redirigiendo al menú.")
+
 
 while True:
     print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --")
@@ -56,33 +94,30 @@ while True:
                 except Exception as e:
                     print(f"Se produjo un error inesperado: {e}")
                 else:
-                    break
+                    if id_student in students:
+                        print(f"El estudiante con id: '{id_student}' ya existe, intente nuevamente. Redirigiendo al menú...")
+                        break
+                    else:
+                        while True:
+                            name_student = input(f"Ingrese el nombre del estudiante: ").strip()
+                            if name_student == "":
+                                print(f"No puede ingresar un valor vacío, intente nuevamente.")
+                            else:
+                                break
 
-            while True:
-                if id_student in students:
-                    print(f"El estudiante con id: '{id_student}' ya existe, intente nuevamente.")
-                else:
+                        while True:
+                            carrer_student = input(f"Ingrese el carrera del estudiante: ")
+                            if carrer_student == "":
+                                print(f"No puede ingresar una carrera vacía, intente nuevamente.")
+                            else:
+                                break
+                        add_student(id_student, name_student, carrer_student)
                     break
-
-            while True:
-                name_student = input(f"\nIngrese el nombre del estudiante: ").strip()
-                if name_student == "":
-                    print(f"No puede ingresar un valor vacío, intente nuevamente.")
-                else:
-                    break
-
-            while True:
-                carrer_student = input(f"\nIngrese el carrera del estudiante: ")
-                if carrer_student == "":
-                    print(f"No puede ingresar una carrera vacía, intente nuevamente.")
-                else:
-                    break
-
-            add_student(id_student, name_student, carrer_student)
 
         case "2":
             print(f"\nAgregar curso con nota")
             request_id_student()
+            add_course()
 
         case "3":
             print(f"\nConsultar estudiante")
