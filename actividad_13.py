@@ -1,4 +1,4 @@
-from logging import exception
+﻿from logging import exception
 
 students = {}
 
@@ -6,12 +6,34 @@ def add_student(id_student, name_student, carrer_student):
     students[id_student] = {
         "name": name_student,
         "carrer": carrer_student,
+        "grade": {}
     }
     print(f"\nEstudiante registrado en el sistema.")
     print(students)
 
+def request_id_student():
+    while True:
+        try:
+            id_user = int(input("Ingresa el ID del usuario: "))
+        except ValueError:
+            print("Error: valor inválido. Intente de nuevo.")
+        except TypeError:
+            print(f"Error: tipo inválido. Intente de nuevo.")
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+        else:
+            if id_user in students:
+                print(f"Nombre del usuario: {students[id_user]['name']}.")
+                print(f"Carrera: {students[id_user]['carrer']}.")
+                print(f"Cursos: {students[id_user]['grade']}")
+                break
+
+            else:
+                print(f"El id {id_user} existe. Redirigiendo al menú, intente de nuevo.")
+                break
+
 while True:
-    print(f"-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --")
+    print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --")
     print(f"1. Agregar estudiantes")
     print(f"2. Agregar curso con nota")
     print(f"3. Consultar estudiante")
@@ -58,12 +80,13 @@ while True:
 
             add_student(id_student, name_student, carrer_student)
 
-
         case "2":
             print(f"\nAgregar curso con nota")
+            request_id_student()
 
         case "3":
             print(f"\nConsultar estudiante")
+            request_id_student()
 
         case "4":
             print(f"\nMostrar estudiantes")
