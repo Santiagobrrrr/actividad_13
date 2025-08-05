@@ -1,9 +1,7 @@
-﻿from logging import exception
-
-students = {}
+﻿students = {}
 courses = {}
 
-def add_student(id_student, name_student, carrer_student):
+def add_student(id_student, name_student, carrer_student): # Función para añadir del case 1, los datos al diccionario principal
     students[id_student] = {
         "name": name_student,
         "carrer": carrer_student,
@@ -12,40 +10,39 @@ def add_student(id_student, name_student, carrer_student):
     print(f"\nEstudiante registrado en el sistema.")
     print(students)
 
-def request_id_student():
+def request_id_student(): # Función que solicita el ID del usuario
     while True:
         try:
-            id_user = int(input("Ingresa el ID del usuario: "))
+            id_user = int(input("Ingresa el ID del usuario: ")) # Solicitud de ID
         except ValueError:
             print("Error: valor inválido. Intente de nuevo.")
         except TypeError:
-            print(f"Error: tipo inválido. Intente de nuevo.")
+            print("Error: tipo inválido. Intente de nuevo.")
         except Exception as e:
             print(f"Error inesperado: {e}")
         else:
             if id_user in students:
-                print(f"Nombre del usuario: {students[id_user]['name']}.")
+                print(f"Nombre del usuario: {students[id_user]['name']}.") # Si el ID existe en el diccionario de estudiantes, se muestra su información
                 print(f"Carrera: {students[id_user]['carrer']}.")
                 print(f"Cursos: {students[id_user]['course']}")
-                break
-
+                return id_user # Retorna el ID del estudiante encontrado
             else:
-                print(f"El id {id_user} existe. Redirigiendo al menú, intente de nuevo.")
-                break
+                print(f"El ID {id_user} no existe. Redirigiendo al menú.") # Si el ID no existe se informa que se regresa al menú principal
+                return None # Se retorna None por si no se encuentra, para poder manejarlo después
 
-def add_course():
+def add_course(id_student): # Función que agrega curso
     while True:
-        course_user = input(f"Ingrese el nombre del curso a agregar: ").strip().lower()
+        course_user = input(f"Ingrese el nombre del curso a agregar: ").strip().lower() # Función para no tener campo vacíos, y se pone en minuscula para no tener inconvenientes
         if course_user == "":
             print(f"No puede ingresar una curso vacío, intente nuevamente.")
         else:
             break
 
-    if course_user not in courses:
+    if course_user not in courses: # Se verifica si el curso que desea agregar ya existe en el subdiccionario del estudiante
         while True:
             try:
-                grade_user = int(input(f"Ingrese la nota del curso: "))
-
+                grade_user = float(input(f"Ingrese la nota del curso: "))
+            # Posibles errores si no ingresa un entero
             except ValueError:
                 print(f"Error: ingreso mal un valor, intente de nuevo.")
             except TypeError:
@@ -54,11 +51,11 @@ def add_course():
                 print(f"Error inesperado: {e}")
 
             else:
-                if grade_user >= 0 and grade_user <= 100:
-                    courses[course_user] = {
+                if grade_user >= 0 and grade_user <= 100: # Solo se guardan las notas de 0 a 100
+                    courses[course_user] = { # Se creo un diccionario para guardar las notas de cada curso
                         "grade_user": grade_user
                     }
-                    students[id_student]["course"][course_user] = courses[course_user]
+                    students[id_student]["course"][course_user] = courses[course_user] # Se guarda el curso y la nota en el ID del estudiante ingresado
                     print(f"Nota registrada en el sistema.")
                     print(courses)
                     print(students)
@@ -66,12 +63,12 @@ def add_course():
 
                 else:
                     print(f"Debe de ingresar una nota entre 0 y 100.")
-        else:
-            print(f"El curso ya esta registrado en el sistema. Intente de nuevo. Redirigiendo al menú.")
+    else:
+        print(f"El curso ya esta registrado en el sistema. Intente de nuevo. Redirigiendo al menú.")
 
 
 while True:
-    print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --")
+    print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --") # Menú principal
     print(f"1. Agregar estudiantes")
     print(f"2. Agregar curso con nota")
     print(f"3. Consultar estudiante")
@@ -83,7 +80,7 @@ while True:
     match option_user:
         case "1":
             print(f"\nAgregar estudiantes")
-            while True:
+            while True: # No se creo una función 'def' para poder manejar variables globales
                 try:
                     id_student = int(input(f"\nIngrese el ID del estudiante: "))
 
@@ -94,30 +91,31 @@ while True:
                 except Exception as e:
                     print(f"Se produjo un error inesperado: {e}")
                 else:
-                    if id_student in students:
+                    if id_student in students: # Hace la verificación si el ID ya existe, si existe lo dirige al menú principal
                         print(f"El estudiante con id: '{id_student}' ya existe, intente nuevamente. Redirigiendo al menú...")
                         break
                     else:
                         while True:
-                            name_student = input(f"Ingrese el nombre del estudiante: ").strip()
+                            name_student = input(f"Ingrese el nombre del estudiante: ").strip() # Función para no poder tener campos vacíos
                             if name_student == "":
                                 print(f"No puede ingresar un valor vacío, intente nuevamente.")
                             else:
                                 break
 
                         while True:
-                            carrer_student = input(f"Ingrese el carrera del estudiante: ")
+                            carrer_student = input(f"Ingrese el carrera del estudiante: ").strip() # Función para no poder tener campos vacíos
                             if carrer_student == "":
                                 print(f"No puede ingresar una carrera vacía, intente nuevamente.")
                             else:
                                 break
-                        add_student(id_student, name_student, carrer_student)
+                        add_student(id_student, name_student, carrer_student) # Se llama a la función de añadir estudiantes con las variables globales tomadas
                     break
 
         case "2":
-            print(f"\nAgregar curso con nota")
-            request_id_student()
-            add_course()
+            print("\nAgregar curso con nota")
+            id_selected = request_id_student() # Llamamos a la función y verificamos el id del valor retornado
+            if id_selected is not None:
+                add_course(id_selected) # Si el ID del valor retornado es válido entonces se agrega el curso
 
         case "3":
             print(f"\nConsultar estudiante")
