@@ -14,6 +14,7 @@ def request_id_student(): # Función que solicita el ID del usuario
     while True:
         try:
             id_user = int(input("Ingresa el ID del usuario: ")) # Solicitud de ID
+        # Posibles errores si no ingresa un entero
         except ValueError:
             print("Error: valor inválido. Intente de nuevo.")
         except TypeError:
@@ -24,7 +25,6 @@ def request_id_student(): # Función que solicita el ID del usuario
             if id_user in students:
                 print(f"Nombre del usuario: {students[id_user]['name']}.") # Si el ID existe en el diccionario de estudiantes, se muestra su información
                 print(f"Carrera: {students[id_user]['carrer']}.")
-                print(f"Cursos: {students[id_user]['course']}")
                 return id_user # Retorna el ID del estudiante encontrado
             else:
                 print(f"El ID {id_user} no existe. Redirigiendo al menú.") # Si el ID no existe se informa que se regresa al menú principal
@@ -33,7 +33,7 @@ def request_id_student(): # Función que solicita el ID del usuario
 def add_course(id_student): # Función que agrega curso
     while True:
         course_user = input(f"Ingrese el nombre del curso a agregar: ").strip().lower() # Función para no tener campo vacíos, y se pone en minuscula para no tener inconvenientes
-        if course_user == "":
+        if course_user == "": # Verificación si ingresa el campo vacío
             print(f"No puede ingresar una curso vacío, intente nuevamente.")
         else:
             break
@@ -66,6 +66,36 @@ def add_course(id_student): # Función que agrega curso
     else:
         print(f"El curso ya esta registrado en el sistema. Intente de nuevo. Redirigiendo al menú.")
 
+def consult_student():  # Función para consultar un estudiante y mostrar sus datos, cursos, promedio y si aprueba
+    id_selected = request_id_student()  # Se solicita el ID del estudiante, reutilizando la función existente
+
+    if id_selected is not None:  # Si se ingresó un ID válido (es decir, está en el sistema)
+        student = students[id_selected]
+        print(f"\n--- Información del estudiante ---")
+        print(f"Nombre: {student['name']}")
+        print(f"Carrera: {student['carrer']}")
+
+        if student["course"]:  # Verificación si el estudiante tiene cursos registrados
+            print(f"\nCursos y notas:")
+            total = 0
+            passed_all = True  # Se asume que ha aprobado todos los cursos
+
+            for course_name, course_info in student["course"].items():  # Se recorre el diccionario de cursos
+                grade = course_info["grade_user"]  # Se obtiene la nota del curso
+                print(f"- {course_name.title()}: {grade} puntos")
+                total += grade
+                if grade < 61:  # Se verifica si alguna nota es menor a 61
+                    passed_all = False  # Si una nota es menor, no aprueba todos
+
+            average = total / len(student["course"])  # Se calcula el promedio de notas
+            print(f"\nPromedio de notas: {average}")
+
+            if passed_all:
+                print(f"El estudiante aprueba todos los cursos.")  # Si todas las notas son >= 61
+            else:
+                print(f"El estudiante no aprueba todos los cursos.")  # Si alguna nota es < 61
+        else:
+            print(f"\nEste estudiante no tiene cursos registrados.")  # Si no tiene cursos en su registro
 
 while True:
     print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --") # Menú principal
@@ -119,7 +149,7 @@ while True:
 
         case "3":
             print(f"\nConsultar estudiante")
-            request_id_student()
+            consult_student()
 
         case "4":
             print(f"\nMostrar estudiantes")
