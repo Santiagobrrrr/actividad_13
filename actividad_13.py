@@ -8,7 +8,7 @@ def add_student(id_student, name_student, carrer_student):
         "carrer": carrer_student,
     }
     print(f"\nEstudiante registrado en el sistema.")
-
+    print(students)
 
 while True:
     print(f"-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --")
@@ -43,20 +43,16 @@ while True:
                     break
 
             while True:
-                try:
-                    name_student = input(f"Ingrese el nombre del estudiante: ")
-                except Exception as e:
-                    print(f"Se produjo un error inesperado: {e}")
+                name_student = input(f"\nIngrese el nombre del estudiante: ").strip()
+                if name_student == "":
+                    print(f"No puede ingresar un valor vacío, intente nuevamente.")
                 else:
                     break
 
             while True:
-                try:
-                    carrer_student = input(f"Ingrese el carrera del estudiante: ")
-
-                except Exception as e:
-                    print(f"Se produjo un error inesperado: {e}")
-
+                carrer_student = input(f"\nIngrese el carrera del estudiante: ")
+                if carrer_student == "":
+                    print(f"No puede ingresar una carrera vacía, intente nuevamente.")
                 else:
                     break
 
