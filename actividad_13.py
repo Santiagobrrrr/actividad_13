@@ -16,9 +16,9 @@ def request_id_student(): # Función que solicita el ID del usuario
             id_user = int(input("Ingresa el ID del usuario: ")) # Solicitud de ID
         # Posibles errores si no ingresa un entero
         except ValueError:
-            print("Error: valor inválido. Intente de nuevo.")
+            print(f"Error: valor inválido. Intente de nuevo.")
         except TypeError:
-            print("Error: tipo inválido. Intente de nuevo.")
+            print(f"Error: tipo inválido. Intente de nuevo.")
         except Exception as e:
             print(f"Error inesperado: {e}")
         else:
@@ -82,7 +82,7 @@ def consult_student():  # Función para consultar un estudiante y mostrar sus da
 
             for course_name, course_info in student["course"].items():  # Se recorre el diccionario de cursos
                 grade = course_info["grade_user"]  # Se obtiene la nota del curso
-                print(f"- {course_name.title()}: {grade} puntos")
+                print(f"- {course_name.upper()}: {grade} puntos")
                 total += grade
                 if grade < 61:  # Se verifica si alguna nota es menor a 61
                     passed_all = False  # Si una nota es menor, no aprueba todos
@@ -96,6 +96,27 @@ def consult_student():  # Función para consultar un estudiante y mostrar sus da
                 print(f"El estudiante no aprueba todos los cursos.")  # Si alguna nota es < 61
         else:
             print(f"\nEste estudiante no tiene cursos registrados.")  # Si no tiene cursos en su registro
+
+def view_students():  # Función que muestra todos los estudiantes registrados con sus cursos y notas
+    while True:
+        if not students:  # Si el diccionario de estudiantes está vacío
+            print("\nNo hay estudiantes registrados aún.")
+            break
+
+        print(f"\n-- Lista de todos los estudiantes registrados --")
+
+        for id_student, data in students.items():
+            print(f"\nID único: {id_student}")
+            print(f"Nombre: {data['name']}")
+            print(f"Carrera: {data['carrer']}")
+
+            if data["course"]:  # Si tiene cursos registrados
+                print(f"Cursos registrados:")
+                for course_name, course_data in data["course"].items(): # Accede a subdiccionario de los cursos
+                    print(f"  - {course_name.upper()}: {course_data['grade_user']} puntos")
+            else:
+                print("No tiene cursos registrados.")
+        break
 
 while True:
     print(f"\n-- MENÚ PARA ADMINISTRACIÓN DE ESTUDIANTES --") # Menú principal
@@ -153,6 +174,7 @@ while True:
 
         case "4":
             print(f"\nMostrar estudiantes")
+            view_students()
 
         case "5":
             print(f"\nSaliendo del programa...")
